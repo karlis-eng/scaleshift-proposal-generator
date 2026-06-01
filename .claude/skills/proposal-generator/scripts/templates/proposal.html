@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{CLIENT_COMPANY}} — Proposal by ScaleShift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --canvas:      #0b0b0f;
+      --surface:     #111118;
+      --surface-2:   #18181f;
+      --border:      rgba(255,255,255,0.08);
+      --border-2:    rgba(255,255,255,0.04);
+      --text-1:      #f0eff4;
+      --text-2:      #a09eb8;
+      --text-3:      #5e5c72;
+      --accent:      #F2721C;
+      --accent-dim:  rgba(242,114,28,0.15);
+      --font-sans:   'Outfit', system-ui, sans-serif;
+      --font-serif:  'Instrument Serif', Georgia, serif;
+      --max-w:       880px;
+
+      /* Light section tokens */
+      --light-bg:      #f7f6f2;
+      --light-surface: #ffffff;
+      --light-border:  rgba(0,0,0,0.08);
+      --light-text-1:  #0f0e14;
+      --light-text-2:  #4a4860;
+      --light-text-3:  #9896aa;
+      --light-accent-dim: rgba(242,114,28,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--canvas);
+      color: var(--text-1);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 100px clamp(24px, 8vw, 80px);
+      border-bottom: 1px solid var(--border-2);
+      position: relative;
+    }
+
+    .section__inner { max-width: var(--max-w); margin: 0 auto; width: 100%; }
+
+    .label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      background:
+        linear-gradient(
+          105deg,
+          rgba(11,11,15,0.96) 0%,
+          rgba(11,11,15,0.82) 55%,
+          rgba(11,11,15,0.45) 100%
+        ),
+        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80') center/cover no-repeat;
+      overflow: hidden;
+    }
+    /* subtle orange glow still on top */
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: 10%; right: 5%;
+      width: 45vw; height: 45vw; max-width: 520px; max-height: 520px;
+      background: radial-gradient(circle, rgba(242,114,28,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .cover__logo {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 3.5rem;
+    }
+    .cover__logo img {
+      width: 36px; height: 36px;
+      border-radius: 50%; object-fit: cover;
+    }
+    .cover__logo span {
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: -0.02em; color: var(--text-1);
+    }
+
+    .cover__brand {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 3rem;
+    }
+
+    .cover__eyebrow {
+      font-size: 0.88rem; font-weight: 500;
+      color: var(--accent); letter-spacing: 0.04em; margin-bottom: 1rem;
+    }
+
+    .cover__title {
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.03em; color: var(--text-1); margin-bottom: 1.5rem;
+    }
+
+    .cover__title em {
+      font-style: italic; font-family: var(--font-serif);
+      font-weight: 400; color: var(--accent);
+    }
+
+    .cover__subtitle {
+      font-size: 1.15rem; color: var(--text-2);
+      max-width: 540px; line-height: 1.75; margin-bottom: 2.5rem;
+    }
+
+    .cover__date { font-size: 0.82rem; color: var(--text-3); }
+
+    /* ── LIGHT SECTIONS ── */
+    /* double-class specificity beats .work / .solution / etc single-class rules */
+    .section.section--light {
+      background: var(--light-bg);
+      color: var(--light-text-1);
+    }
+    .section.section--light .label { color: var(--accent); }
+    .section--light .work__title,
+    .section--light .solution__title,
+    .section--light .scope__title,
+    .section--light .pricing__amount { color: var(--light-text-1); }
+    .section--light .work__title em,
+    .section--light .solution__lead { color: var(--light-text-2); }
+    .section--light .work__card {
+      background: var(--light-surface);
+      border-color: var(--light-border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .section--light .work__card-before { color: var(--light-text-3); }
+    .section--light .work__card-after  { color: var(--light-text-2); }
+    .section--light .solution__item {
+      background: var(--light-surface);
+      border-color: var(--light-border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .section--light .solution__num {
+      background: var(--light-accent-dim);
+    }
+    .section--light .solution__item-title { color: var(--light-text-1); }
+    .section--light .solution__item-desc  { color: var(--light-text-2); }
+    .section--light .scope__lead          { color: var(--light-text-2); }
+    .section--light .scope__item {
+      background: var(--light-surface);
+      border-color: var(--light-border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .section--light .scope__item-title { color: var(--light-text-1); }
+    .section--light .scope__item-desc  { color: var(--light-text-2); }
+    .section--light .pricing__headline { color: var(--light-text-2); }
+    .section--light .pricing__note     { color: var(--light-text-3); }
+
+    /* ── CASE STUDIES ── */
+    .work { background: var(--surface); }
+
+    .work__title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 3rem;
+    }
+
+    .work__title em { font-style: italic; font-family: var(--font-serif); font-weight: 400; color: var(--text-2); }
+
+    .work__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+
+    .work__card {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.6rem;
+    }
+
+    .work__card-client {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+    }
+
+    .work__card-title {
+      font-size: 0.97rem; font-weight: 600;
+      color: var(--text-1); margin-bottom: 1rem; line-height: 1.35;
+    }
+    .section.section--light .work__card-title { color: var(--light-text-1); }
+
+    .work__card-before { font-size: 0.83rem; color: var(--text-3); margin-bottom: 0.4rem; line-height: 1.5; }
+    .work__card-after  { font-size: 0.83rem; color: var(--text-2); line-height: 1.5; }
+    .work__card-before b, .work__card-after b { font-weight: 600; }
+
+    /* ── PROBLEM ── */
+    .problem { background: var(--canvas); }
+
+    .problem__title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2rem;
+    }
+
+    .problem__body { font-size: 1.18rem; color: var(--text-2); line-height: 1.85; max-width: 660px; }
+
+    /* ── SOLUTION ── */
+    .solution { background: var(--surface); }
+
+    .solution__title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem;
+    }
+
+    .solution__lead {
+      font-size: 1.05rem; color: var(--text-2);
+      font-style: italic; font-family: var(--font-serif); margin-bottom: 2.5rem;
+    }
+
+    .solution__items { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .solution__item {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.6rem;
+    }
+
+    .solution__icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: var(--accent-dim); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); margin-top: 2px;
+    }
+    .section.section--light .solution__icon { background: var(--light-accent-dim); }
+    .solution__icon svg { width: 20px; height: 20px; stroke-width: 1.8; }
+
+    .solution__item-title { font-size: 1rem; font-weight: 600; color: var(--text-1); margin-bottom: 0.35rem; }
+    .solution__item-desc  { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; }
+    .section.section--light .solution__item-title { color: var(--light-text-1); }
+    .section.section--light .solution__item-desc  { color: var(--light-text-2); }
+
+    .solution__deliverable {
+      margin-top: 1rem; padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.83rem; color: var(--text-2); line-height: 1.55;
+    }
+    .section.section--light .solution__deliverable {
+      border-top-color: var(--light-border);
+      color: var(--light-text-2);
+    }
+    .deliverable-label {
+      display: block; font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.3rem;
+    }
+
+    /* ── TRANSITION ── */
+    .transition-section {
+      background: linear-gradient(135deg, #0b0b0f 0%, #130f0a 100%);
+      justify-content: center; text-align: center;
+    }
+
+    .transition__quote {
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      font-family: var(--font-serif); font-style: italic;
+      color: var(--text-1); line-height: 1.55; max-width: 680px; margin: 0 auto;
+    }
+
+    .transition__quote strong {
+      font-style: normal; font-family: var(--font-sans);
+      font-weight: 700; color: var(--accent);
+    }
+
+    /* ── SCOPE ── */
+    .scope { background: var(--surface); }
+
+    .scope__title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem;
+    }
+
+    .scope__lead { font-size: 1.05rem; color: var(--text-2); margin-bottom: 2.5rem; }
+
+    .scope__items { display: flex; flex-direction: column; gap: 1rem; }
+
+    .scope__item {
+      display: flex; align-items: flex-start;
+      padding: 1.4rem 1.5rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 10px; border-left: 3px solid var(--accent);
+    }
+
+    .scope__item-title { font-size: 0.97rem; font-weight: 600; color: var(--text-1); margin-bottom: 0.3rem; }
+    .scope__item-desc  { font-size: 0.87rem; color: var(--text-2); line-height: 1.55; }
+
+    /* ── TIMELINE ── */
+    .timeline { background: var(--canvas); }
+
+    .timeline__title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2.5rem;
+    }
+
+    .timeline__grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+    }
+
+    .timeline__item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.6rem;
+    }
+
+    .timeline__day {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+    }
+
+    .timeline__desc { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--surface); }
+
+    .pricing__headline {
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+      color: var(--text-2); font-weight: 400; line-height: 1.55;
+      margin-bottom: 2.5rem; max-width: 580px;
+    }
+
+    .pricing__amount {
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      color: var(--text-1); line-height: 1.25; margin-bottom: 1rem;
+    }
+
+    .pricing__amount span { color: var(--accent); }
+
+    .pricing__note { font-size: 0.78rem; color: var(--text-3); margin-top: 1rem; }
+
+    /* ── CONTRACT ── */
+    .contract__title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem; color: var(--light-text-1); }
+    .contract__subtitle { font-size: 1.05rem; color: var(--light-text-2); margin-bottom: 2rem; }
+    .contract__doc {
+      background: var(--light-surface); border: 1px solid var(--light-border);
+      border-radius: 12px; padding: 2.5rem;
+      font-size: 0.87rem; line-height: 1.75; color: var(--light-text-2);
+    }
+    .contract__meta { margin-bottom: 1.5rem; color: var(--light-text-2); }
+    .contract__parties { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--light-border); }
+    .contract__party { background: var(--light-bg); border-radius: 8px; padding: 1.25rem; font-size: 0.82rem; line-height: 1.7; }
+    .contract__party-lbl { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+    .contract__clause { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--light-border); }
+    .contract__clause:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .contract__clause h4 { font-size: 0.82rem; font-weight: 700; color: var(--light-text-1); margin-bottom: 0.5rem; }
+    .contract__clause p { margin-bottom: 0.5rem; }
+    .contract__clause ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+    .contract__clause li { margin-bottom: 0.3rem; }
+    .contract__purpose { background: var(--light-bg); border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 2rem; font-size: 0.83rem; }
+    @media (max-width: 640px) {
+      .contract__parties { grid-template-columns: 1fr; }
+      .contract__doc { padding: 1.5rem; }
+    }
+
+    /* ── SIGN & PAY ── */
+    .signpay { background: var(--canvas); }
+
+    .signpay__title {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem;
+    }
+
+    .signpay__subtitle { font-size: 1.05rem; color: var(--text-2); margin-bottom: 2.5rem; }
+
+    .sig-wrap {
+      background: #fff; border-radius: 10px; overflow: hidden;
+      max-width: 600px; margin-bottom: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    #signature-pad { width: 100%; height: 200px; display: block; cursor: crosshair; }
+
+    .sig-controls { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+
+    .sig-note { font-size: 0.78rem; color: var(--text-3); max-width: 600px; margin-bottom: 2rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600;
+      padding: 13px 26px; border-radius: 8px; text-decoration: none;
+      cursor: pointer; border: none;
+      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn--primary { background: var(--accent); color: #fff; }
+    .btn--primary:hover { background: #f28340; box-shadow: 0 8px 28px rgba(242,114,28,0.32); transform: translateY(-2px); }
+    .btn--primary:active { transform: scale(0.97); }
+
+    .btn--ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+    .btn--ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text-1); }
+
+    #submit-btn { max-width: 600px; width: 100%; justify-content: center; font-size: 1rem; padding: 17px 28px; }
+    #submit-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .status-msg {
+      font-size: 0.88rem; padding: 12px 16px; border-radius: 8px;
+      max-width: 600px; margin-top: 1rem; display: none;
+    }
+
+    .status-msg--error   { background: rgba(220,60,60,0.12); border: 1px solid rgba(220,60,60,0.25); color: #f08080; }
+    .status-msg--success { background: rgba(40,180,100,0.12); border: 1px solid rgba(40,180,100,0.25); color: #60d080; }
+
+    /* ── THANK YOU ── */
+    .thankyou { background: var(--surface); display: none; }
+    .thankyou.visible { display: flex; }
+
+    .thankyou__title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.5rem;
+    }
+
+    .thankyou__title em { font-style: italic; font-family: var(--font-serif); font-weight: 400; color: var(--accent); }
+
+    .thankyou__body { font-size: 1.05rem; color: var(--text-2); line-height: 1.85; max-width: 540px; margin-bottom: 2rem; }
+
+    .thankyou__body a { color: var(--accent); text-decoration: none; }
+    .thankyou__body a:hover { text-decoration: underline; }
+
+    .thankyou__sig { font-size: 1.1rem; font-weight: 600; color: var(--text-1); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .section { padding: 70px 24px; }
+      .timeline__grid { grid-template-columns: 1fr; }
+      .work__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="section cover">
+  <div class="section__inner">
+    <div class="cover__logo">
+      <img src="https://scaleshift.io/sula_agency.png" alt="ScaleShift">
+      <span>Scaleshift</span>
+    </div>
+    <div class="cover__eyebrow">{{CLIENT_COMPANY}} · Personalized 2025 Proposal</div>
+    <h1 class="cover__title">{{PROPOSAL_TITLE}}</h1>
+    <p class="cover__subtitle">{{DESCRIPTION_NAME}}</p>
+    <div class="cover__date">{{CURRENT_DATE}}</div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="section work section--light">
+  <div class="section__inner">
+    <h2 class="work__title">Some of our <em>work</em></h2>
+    <div class="work__grid">
+      <div class="work__card">
+        <div class="work__card-client">PPCAssist</div>
+        <div class="work__card-title">YouTube → Reels Automated Generation System</div>
+        <p class="work__card-before"><b>Before:</b> Editors spent ~60 min per reel.</p>
+        <p class="work__card-after"><b>Now:</b> High-quality branded reels auto-generated — only approval needed.</p>
+      </div>
+      <div class="work__card">
+        <div class="work__card-client">JFDigital</div>
+        <div class="work__card-title">Automated Sales Proposal Generator</div>
+        <p class="work__card-before"><b>Before:</b> 1.5 hours of manual work per proposal.</p>
+        <p class="work__card-after"><b>Now:</b> 5-minute form creates a professional, personalized proposal.</p>
+      </div>
+      <div class="work__card">
+        <div class="work__card-client">Bridge Dental</div>
+        <div class="work__card-title">PDF Invoice Data Extractor</div>
+        <p class="work__card-before"><b>Before:</b> Manually entered invoice data into a database.</p>
+        <p class="work__card-after"><b>Now:</b> AI extracts key info from PDFs in under 2 minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section problem">
+  <div class="section__inner">
+    <span class="label">The Problem</span>
+    <h2 class="problem__title">Here's what we heard.</h2>
+    <p class="problem__body">{{ONE_PARAGRAPH_PROBLEM_SUMMARY}}</p>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="section solution section--light">
+  <div class="section__inner">
+    <span class="label">The Solution</span>
+    <h2 class="solution__title">Here's what we've come up with.</h2>
+    <p class="solution__lead">After thinking deeply on things, here's our proposal:</p>
+    <div class="solution__items">
+      <div class="solution__item">
+        <div class="solution__icon"><i data-lucide="{{SOLUTION_ICON_ONE}}"></i></div>
+        <div>
+          <div class="solution__item-title">{{SOLUTION_HEADING_ONE}}</div>
+          <div class="solution__item-desc">{{SOLUTION_DESCRIPTION_ONE}}</div>
+          <div class="solution__deliverable">
+            <span class="deliverable-label">Deliverable</span>
+            {{SHORT_SCOPE_DESCRIPTION_ONE}}
+          </div>
+        </div>
+      </div>
+      <div class="solution__item">
+        <div class="solution__icon"><i data-lucide="{{SOLUTION_ICON_TWO}}"></i></div>
+        <div>
+          <div class="solution__item-title">{{SOLUTION_HEADING_TWO}}</div>
+          <div class="solution__item-desc">{{SOLUTION_DESCRIPTION_TWO}}</div>
+          <div class="solution__deliverable">
+            <span class="deliverable-label">Deliverable</span>
+            {{SHORT_SCOPE_DESCRIPTION_TWO}}
+          </div>
+        </div>
+      </div>
+      <div class="solution__item">
+        <div class="solution__icon"><i data-lucide="{{SOLUTION_ICON_THREE}}"></i></div>
+        <div>
+          <div class="solution__item-title">{{SOLUTION_HEADING_THREE}}</div>
+          <div class="solution__item-desc">{{SOLUTION_DESCRIPTION_THREE}}</div>
+          <div class="solution__deliverable">
+            <span class="deliverable-label">Deliverable</span>
+            {{SHORT_SCOPE_DESCRIPTION_THREE}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSITION -->
+<section class="section transition-section">
+  <div class="section__inner">
+    <p class="transition__quote">
+      Not only will this solve the problem you have <strong>now</strong> —
+      it'll build scalable infrastructure that will solve dozens you don't even know about yet.
+    </p>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section timeline">
+  <div class="section__inner">
+    <span class="label">Timeline</span>
+    <h2 class="timeline__title">How we get there.</h2>
+    <div class="timeline__grid">
+      <div class="timeline__item">
+        <div class="timeline__day">{{MILESTONE_ONE_DAY}}</div>
+        <div class="timeline__desc">{{MILESTONE_DESCRIPTION_ONE}}</div>
+      </div>
+      <div class="timeline__item">
+        <div class="timeline__day">{{MILESTONE_TWO_DAY}}</div>
+        <div class="timeline__desc">{{MILESTONE_DESCRIPTION_TWO}}</div>
+      </div>
+      <div class="timeline__item">
+        <div class="timeline__day">{{MILESTONE_THREE_DAY}}</div>
+        <div class="timeline__desc">{{MILESTONE_DESCRIPTION_THREE}}</div>
+      </div>
+      <div class="timeline__item">
+        <div class="timeline__day">{{MILESTONE_FOUR_DAY}}</div>
+        <div class="timeline__desc">{{MILESTONE_DESCRIPTION_FOUR}}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section pricing section--light">
+  <div class="section__inner">
+    <span class="label">Investment</span>
+    <p class="pricing__headline">
+      Our billing structure is extremely simple:<br>half up-front, half upon delivery.
+    </p>
+    <div class="pricing__amount">
+      You'd pay <span>{{DEPOSIT_COST}}</span> today<br>
+      and <span>{{DEPOSIT_COST}}</span> when it's finished.
+    </div>
+    <p class="pricing__note">*Excluding software fees</p>
+  </div>
+</section>
+
+<!-- CONTRACT_START -->
+<section class="section section--light" id="contract-section">
+  <div class="section__inner">
+    <span class="label">Technical Services Agreement</span>
+    <h2 class="contract__title">The contract.</h2>
+    <p class="contract__subtitle">Review below — your signature covers both this proposal and the agreement.</p>
+    <div class="contract__doc">
+      <p class="contract__meta">This Agreement is made as of <strong>{{CURRENT_DATE}}</strong>, by and between:</p>
+
+      <div class="contract__parties">
+        <div class="contract__party">
+          <div class="contract__party-lbl">The Consultant</div>
+          <strong>Kārlis Leilands</strong><br>
+          Personal Code: 300801-20704<br>
+          Krišjāņa Barona iela 24/26-26, LV-1050, Riga, Latvia<br>
+          Registered Self-Employed (Latvia), Non-VAT Payer<br>
+          karlis@scaleshift.io
+        </div>
+        <div class="contract__party">
+          <div class="contract__party-lbl">The Client</div>
+          <strong>{{CLIENT_COMPANY}}</strong><br>
+          {{CLIENT_REGISTRATION_LINE}}{{CLIENT_VAT_LINE}}{{CLIENT_ADDRESS}}<br>
+          Represented by: {{CLIENT_REP_NAME}}{{CLIENT_REP_TITLE_LINE}}
+        </div>
+      </div>
+
+      <p class="contract__purpose">
+        This agreement outlines the terms for provision of technical services by Kārlis Leilands ("Consultant") to {{CLIENT_COMPANY}} ("Client"). The Consultant performs services as an independent contractor, not as an employee or representative of the Client.
+      </p>
+
+      <div class="contract__clause">
+        <h4>1. Scope of Work</h4>
+        <p>The Consultant shall deliver the following:</p>
+        <ul>
+          <li><strong>{{SOLUTION_HEADING_ONE}}</strong> — {{SHORT_SCOPE_DESCRIPTION_ONE}}</li>
+          <li><strong>{{SOLUTION_HEADING_TWO}}</strong> — {{SHORT_SCOPE_DESCRIPTION_TWO}}</li>
+          <li><strong>{{SOLUTION_HEADING_THREE}}</strong> — {{SHORT_SCOPE_DESCRIPTION_THREE}}</li>
+        </ul>
+        <p>Documentation: Text &amp; video walkthroughs on all delivered systems.<br>
+        Timeline: Delivery within <strong>{{HOW_SOON}}</strong> from payment commencement.</p>
+      </div>
+
+      <div class="contract__clause">
+        <h4>2. Payment Terms</h4>
+        <ul>
+          <li>Total fee: <strong>{{COST}}</strong></li>
+          <li>Payment schedule: 50% upfront ({{DEPOSIT_COST}}), 50% upon delivery ({{DEPOSIT_COST}})</li>
+          <li>Payment via Stripe invoice. No VAT charged (non-VAT payer, Latvia).</li>
+        </ul>
+      </div>
+
+      <div class="contract__clause">
+        <h4>3. Intellectual Property</h4>
+        <p>Upon full payment, all IP rights to assets developed specifically for the Client transfer to the Client.</p>
+      </div>
+
+      <div class="contract__clause">
+        <h4>4. Confidentiality</h4>
+        <p>The Consultant will maintain confidentiality of all Client data, credentials, and business logic shared during the project.</p>
+      </div>
+
+      <div class="contract__clause">
+        <h4>5. Liability &amp; Third-Party Services</h4>
+        <ul>
+          <li>The Consultant is not responsible for interruptions or policy changes by third-party providers (OpenAI, n8n, etc.).</li>
+          <li>The Client indemnifies the Consultant against legal claims arising from use of generated content or automated systems.</li>
+        </ul>
+      </div>
+
+      <div class="contract__clause">
+        <h4>6. Governing Law &amp; Dispute Resolution</h4>
+        <p>Governed by the laws of the Republic of Latvia. Disputes resolved through mutual negotiation or, if failing, in the courts of the Republic of Latvia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRACT_END -->
+
+<!-- SIGN & PAY -->
+<section class="section signpay" id="sign-section">
+  <div class="section__inner">
+    <span class="label">Ready to move forward?</span>
+    <h2 class="signpay__title">Sign &amp; pay your deposit.</h2>
+    <p class="signpay__subtitle">
+      Sign below to confirm you're in, then pay your deposit to kick things off.
+    </p>
+
+    <div class="sig-wrap">
+      <canvas id="signature-pad"></canvas>
+    </div>
+
+    <div class="sig-controls">
+      <button class="btn btn--ghost" id="clear-btn" type="button">Clear</button>
+    </div>
+
+    <p class="sig-note">
+      By signing, you agree to the scope and payment terms outlined above.
+    </p>
+
+    <button class="btn btn--primary" id="submit-btn" type="button">
+      {{SUBMIT_BUTTON_TEXT}}
+    </button>
+
+    <div class="status-msg status-msg--error"   id="error-msg"></div>
+    <div class="status-msg status-msg--success" id="success-msg"></div>
+    <a class="btn btn--primary" id="pay-btn" href="{{STRIPE_PAYMENT_URL}}" style="display:none;margin-top:1rem;text-decoration:none;">
+      Pay Deposit &rarr;
+    </a>
+  </div>
+</section>
+
+<!-- THANK YOU -->
+<section class="section thankyou" id="thankyou">
+  <div class="section__inner">
+    <span class="label">You're in.</span>
+    <h2 class="thankyou__title">Thank <em>you!</em></h2>
+    <p class="thankyou__body">
+      You were just sent an invoice alongside this proposal. If you have any questions,
+      please email me at <a href="mailto:karlis@scaleshift.io">karlis@scaleshift.io</a>
+      and I'll help answer them.<br><br>
+      Otherwise, the moment you pay, you'll get an email inviting you to a kick-off call
+      where we can get started. Looking forward to knocking this out the park for you!
+    </p>
+    <div class="thankyou__sig">— Karlis</div>
+  </div>
+</section>
+
+<script>
+  // ── Signature Pad ─────────────────────────────────
+  const canvas = document.getElementById('signature-pad');
+  const pad = new SignaturePad(canvas, {
+    backgroundColor: 'rgb(255,255,255)',
+    penColor: 'rgb(10,10,15)',
+    minWidth: 1.5,
+    maxWidth: 2.5,
+  });
+
+  function resizeCanvas() {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const rect  = canvas.getBoundingClientRect();
+    canvas.width  = rect.width  * ratio;
+    canvas.height = rect.height * ratio;
+    canvas.getContext('2d').scale(ratio, ratio);
+    pad.clear();
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  document.getElementById('clear-btn').addEventListener('click', () => pad.clear());
+
+  // ── Submit signature → redirect to Stripe ─────────
+  document.getElementById('submit-btn').addEventListener('click', async () => {
+    if (pad.isEmpty()) {
+      show('error', 'Please sign above before proceeding.');
+      return;
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving signature…';
+
+    try {
+      const res = await fetch('{{SIGN_ENDPOINT}}', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ signature: pad.toDataURL('image/png') }),
+      });
+
+      if (!res.ok) throw new Error('Save failed');
+
+      show('success', 'Signature saved!');
+      document.getElementById('pay-btn').style.display = 'inline-block';
+    } catch (err) {
+      show('error', 'Signature could not be saved — you can still proceed to payment below.');
+      document.getElementById('pay-btn').style.display = 'inline-block';
+      btn.disabled = false;
+      btn.innerHTML = '{{SUBMIT_BUTTON_TEXT}}';
+    }
+  });
+
+  function show(type, text) {
+    document.querySelectorAll('.status-msg').forEach(el => el.style.display = 'none');
+    const el = document.getElementById(type + '-msg');
+    el.textContent = text;
+    el.style.display = 'block';
+  }
+
+  // ── Render Lucide icons ────────────────────────────
+  lucide.createIcons();
+
+  // ── Show thank-you if returning from Stripe ────────
+  if (new URLSearchParams(window.location.search).get('paid') === '1') {
+    document.getElementById('sign-section').style.display = 'none';
+    const ty = document.getElementById('thankyou');
+    ty.classList.add('visible');
+    setTimeout(() => ty.scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+</script>
+</body>
+</html>
